@@ -1,2 +1,29 @@
-# WinRaze-Optimize-10-11
-⚡ The Ultimate S-Rank Performance Suite for Windows 10 &amp; 11. Built by CyberKun (Rohit Kr. Mandal).
+# 🌌 WinRaze [Nexus Edition]
+### Universal Optimization Suite for Windows 10 & 11
+
+**WinRaze** is a high-performance PowerShell utility developed by **Rohit Kr. Mandal** (Alias: `CyberKun`). It is designed to "raze" system bloat to the ground, providing an S-Rank environment for gamers, developers, and power users.
+
+[![GitHub stars](https://img.shields.io/github/stars/Rohit5984/WinRaze-Optimize-10-11?style=social)](https://github.com/Rohit5984/WinRaze-Optimize-10-11)
+![Version](https://img.shields.io/badge/Version-1.0_BETA-magenta)
+![License: MIT](https://img.shields.io/badge/License-MIT-cyan)
+![Platform](https://img.shields.io/badge/Platform-Windows_10%2F11-blue)
+
+---
+
+## 🛠 S-Rank Features
+* **🔥 Neural-Raze:** Force-shuts unnecessary background services and optimizes the kernel for ultra-low latency.
+* **🗡️ Debloat (Hard-Purge):** Permanently eliminates **Microsoft Edge** and **OneDrive** including their registry leftovers.
+* **🛡️ Ghost Protocol:** Disables all telemetry, data-logging, and intrusive background permissions.
+* **💠 Nexus Interface:** A stunning Magenta-Cyan hacker terminal experience for the modern operator.
+
+---
+
+## 🚀 Quick Start (Infiltration Shortcut)
+
+Run **WinRaze** instantly without manual downloads. 
+
+1. Press <kbd>Win</kbd> + <kbd>X</kbd> and select **Terminal (Admin)** or **PowerShell (Admin)**.
+2. Copy and paste the following command, then hit **Enter**:
+
+```powershell
+irm [https://raw.githubusercontent.com/Rohit5984/WinRaze-Optimize-10-11/main/WinRaze.ps1](https://raw.githubusercontent.com/Rohit5984/WinRaze-Optimize-10-11/main/WinRaze.ps1) | iex
