@@ -22,8 +22,10 @@
 
 Run **WinRaze** instantly without manual downloads. 
 
-1. Press <kbd>Win</kbd> + <kbd>X</kbd> and select **Terminal (Admin)** or **PowerShell (Admin)**.
-2. Copy and paste the following command, then hit **Enter**:
+1.  Press <kbd>Win</kbd> + <kbd>R</kbd> to open the **Run** dialog.
+2.  Type `powershell` in the box.
+3.  Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd> to launch as **Administrator**.
+4.  Copy the command below, paste it into the blue window, and hit **Enter**:
 
 ```powershell
 irm [https://raw.githubusercontent.com/Rohit5984/WinRaze-Optimize-10-11/main/WinRaze.ps1](https://raw.githubusercontent.com/Rohit5984/WinRaze-Optimize-10-11/main/WinRaze.ps1) | iex
