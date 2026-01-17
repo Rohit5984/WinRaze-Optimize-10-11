@@ -159,6 +159,12 @@ $btChoice = Read-Host "Do you use Bluetooth (Mouse, Keyboard, or Headphones)? (Y
 if ($btChoice -eq "N") {
     Set-ServiceState -ServiceList @("bthserv", "BTAGService", "BthAvctpSvc", "BluetoothUserService_*") -State "Disable"
 }
+elseif ($btChoice -eq "Y") {
+    Set-ServiceState -ServiceList @("bthserv", "BTAGService", "BthAvctpSvc", "BluetoothUserService_*") -State "Enable"
+}
+else {
+    Write-Host "Invalid choice. Please enter Y or N."
+}
 
 # 6. BIOMETRICS
 $bioChoice = Read-Host "Do you use Fingerprint or Face ID to login? (Y/N)"
@@ -2003,4 +2009,5 @@ Stop-Process -name explorer
 Import-StartLayout -LayoutPath $layoutFile -MountPath $env:SystemDrive\
 
 Remove-Item $layoutFile
+
 Pause
