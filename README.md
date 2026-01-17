@@ -28,4 +28,4 @@ Run **WinRaze** instantly without manual downloads.
 4.  Copy the command below, paste it into the blue window, and hit **Enter**:
 
 ```powershell
-irm [https://raw.githubusercontent.com/Rohit5984/WinRaze-Optimize-10-11/main/WinRaze.ps1](https://raw.githubusercontent.com/Rohit5984/WinRaze-Optimize-10-11/main/WinRaze.ps1) | iex
+irm https://raw.githubusercontent.com/Rohit5984/WinRaze-Optimize-10-11/main/WinRaze.ps1 | iex
