@@ -194,9 +194,6 @@ if ($netChoice -eq "Y") {
     Set-ServiceState -ServiceList @("iphlpsvc", "Netlogon") -State "Disable"
 }
 
-Write-Host "`nConfiguration Complete! Please Restart your PC for changes to take effect." -ForegroundColor Green
-Pause
-
 # Ask the user if they want to enable or disable camera and microphone access
 $choice = Read-Host "Do you want Camera & Microphone? (Y/N)"
 
@@ -2007,7 +2004,87 @@ Stop-Process -name explorer
 
 # Uncomment the next line to make clean start menu default for all new users
 Import-StartLayout -LayoutPath $layoutFile -MountPath $env:SystemDrive\
-
 Remove-Item $layoutFile
 
-Pause
+# Top Header
+Write-Host " ===================================================== " -ForegroundColor Cyan
+Write-Host "    ⚡ CONGRATULATIONS DEAR: MISSION ACCOMPLISHED ⚡     " -ForegroundColor White -BackgroundColor DarkBlue
+Write-Host " ===================================================== " -ForegroundColor Cyan
+
+# My Personal Message
+Write-Host ""
+Write-Host " [>] " -NoNewline -ForegroundColor White; Write-Host "STATUS : " -NoNewline -ForegroundColor Cyan; Write-Host "SYSTEM DEVASTATED & REBORN" -ForegroundColor Green
+Write-Host " [>] " -NoNewline -ForegroundColor White; Write-Host "MESSAGE: " -NoNewline -ForegroundColor Cyan; Write-Host "I hope your system is now free from lag and" -ForegroundColor White
+Write-Host "            experiencing smooth, elite performance." -ForegroundColor White
+Write-Host ""
+
+# The Iconic WinRaze Gradient Logo (The "Wow" Factor)
+Write-Host "  __      __.__          __________                     " -ForegroundColor Cyan
+Write-Host " /  \    /  \__| ____   \______   \_____  ________ ____ " -ForegroundColor Cyan
+Write-Host " \   \/\/   /  |/    \   |       _/\__  \ \___   // __ \" -ForegroundColor White
+Write-Host "  \        /|  |   |  \  |    |   \ / __ \_/    /\  ___/" -ForegroundColor Blue
+Write-Host "   \__/\  / |__|___|  /  |____|_  /(____  /_____ \\___  >" -ForegroundColor DarkBlue
+Write-Host "        \/          \/          \/      \/      \/    \/ " -ForegroundColor DarkBlue
+
+# Credits
+Write-Host ""
+Write-Host " [★] Created by: " -NoNewline -ForegroundColor White; Write-Host "Cyberkun (Rohit Kr. Mandal)" -ForegroundColor Green
+Write-Host " ----------------------------------------------------- " -ForegroundColor Gray
+
+# The Final Interactive Prompt
+Write-Host ""
+Write-Host " Press any key to continue our WinRaze terminal for SOFTWARE INSTALLATION PROCESS" -ForegroundColor Gray
+
+# Secure Terminal Hold
+$null = [Console]::ReadKey($true)
+
+# Setup Security & Folders
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$desktop = [Environment]::GetFolderPath("Desktop")
+$folder = "$desktop\WinRaze_Tools"
+if (!(Test-Path $folder)) { New-Item -ItemType Directory -Path $folder | Out-Null }
+
+# Update your Download function with this logic for better feedback
+function Download-WinRazeTool {
+    param($url, $fileName)
+    $fullPath = Join-Path $folder $fileName
+    
+    Write-Host "`n [*] Establishing Secure Connection to Vault..." -ForegroundColor Yellow
+    Write-Host " [!] Speed depends on your Connection. Please wait..." -ForegroundColor DarkGray
+    
+    try {
+        # This command triggers the built-in progress bar
+        Invoke-WebRequest -Uri $url -OutFile $fullPath -UserAgent "Mozilla/5.0" -MaximumRedirection 5 -ErrorAction Stop
+        
+        $sizeMB = [Math]::Round((Get-Item $fullPath).Length / 1MB, 2)
+        Write-Host " [SUCCESS] Received $fileName" -ForegroundColor Green
+        Write-Host " [INFO] Total Data: $sizeMB MB" -ForegroundColor Cyan
+    } catch {
+        Write-Host " [FAILED] Connection Timed Out or Interrupted." -ForegroundColor Red
+        Write-Host "      Error: $($_.Exception.Message)" -ForegroundColor Gray
+    }
+}
+
+# TOOL 1
+$choice = Read-Host " [?] Download ToolWiz Time Freeze? (Y/N)"
+if ($choice -eq "Y" -or $choice -eq "y") {
+    Download-WinRazeTool -url "https://github.com/Rohit5984/Software/releases/download/v1.0.0/ToolWiz.Time.Freeze.exe" -fileName "ToolWiz_TimeFreeze.exe"
+}
+
+# TOOL 2
+$choice = Read-Host " [?] Download Outbyte Camomile? (Y/N)"
+if ($choice -eq "Y" -or $choice -eq "y") {
+    Download-WinRazeTool -url "https://github.com/Rohit5984/Software/releases/download/v1.0.0/Outbyte.Camomile.CPU.cooler.long.battery.life.exe" -fileName "Camomile_Cooler.exe"
+}
+
+# TOOL 3
+$choice = Read-Host " [?] Download Thorium Browser? (Y/N)"
+if ($choice -eq "Y" -or $choice -eq "y") {
+    Download-WinRazeTool -url "https://github.com/Rohit5984/Software/releases/download/v1.0.0/Thorium_AVX_mini_installer.exe" -fileName "Thorium_Installer.exe"
+}
+
+Write-Host "`n [>] Process finished. Opening folder..." -ForegroundColor Gray
+Start-Process explorer.exe $folder
+Write-Host " Press any key to exit..." -ForegroundColor Gray
+$null = [Console]::ReadKey($true)
+
