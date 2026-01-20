@@ -165,7 +165,7 @@ $bloat = @(
     
     # --- Telemetry, Diagnostics & Beta Testing ---
     "DiagTrack", "WerSvc", "dmwappushservice", "diagsvc", "wisvc", "DPS", "WdiServiceHost", "WdiSystemHost", 
-    "DiagnosticsHub.StandardCollector.Service", "WSearch", "AxInstSV",
+    "WSearch", "AxInstSV",
     
     # --- Identity & Payments (No Payments/Smart Cards) ---
     "WalletService", "SEMgrSvc", "EntAppStoreSvc", "SCardSvr", "ScDeviceEnum", "SCPolicySvc", "WpcMonSvc",
@@ -175,7 +175,7 @@ $bloat = @(
     
     # --- General Bloat ---
     "MapsBroker", "Fax", "PhoneSvc", "RetailDemo", "workfolderssvc", "AssignedAccessManagerSvc", 
-    "lfsvc", "SensorService", "SensorDataService", "SensrSvc", "TrkWks", "Wecsvc",
+    "lfsvc", "SensorService", "SensorDataService", "SensrSvc", "TrkWks", 
     
     # --- Virtualization (Hyper-V) ---
     "HvHost", "vmickvpexchange", "vmicguestinterface", "vmicshutdown", "vmicheartbeat", 
@@ -2117,5 +2117,6 @@ Write-Host "`n [>] Process finished. Opening folder..." -ForegroundColor Gray
 Start-Process explorer.exe $folder
 Write-Host " Press any key to exit..." -ForegroundColor Gray
 $null = [Console]::ReadKey($true)
+
 
 
