@@ -92,7 +92,6 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
 
 # Set NetworkThrottlingIndex to 0xffffffff for better network performance
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name "NetworkThrottlingIndex" -Value 0xffffffff
-
 # ---------------------------------------------------------
 # Ultimate "Strict" Windows Service Manager
 # ---------------------------------------------------------
@@ -123,74 +122,105 @@ Write-Host "--- Windows Service Optimization Script ---" -ForegroundColor White
 Write-Host "This script will strictly DISABLE services based on your choices." -ForegroundColor Yellow
 Write-Host "------------------------------------------------------------"
 
-# 1. ALWAYS DISABLE (The "Safe" List - Privacy, Telemetry, and Bloat)
+# ==============================================================================
+# ULTRA-LEAN WINDOWS PERFORMANCE & PRIVACY SCRIPT
+# Profile: No Games | No Edge | No Payments | No Backup | No Diagnostics
+# ==============================================================================
+
+# HELPER FUNCTION: Processes service changes and handles wildcards
+function Set-ServiceState {
+    param (
+        [string[]]$ServiceList,
+        [string]$State
+    )
+    foreach ($name in $ServiceList) {
+        $services = Get-Service -Name $name -ErrorAction SilentlyContinue
+        foreach ($svc in $services) {
+            try {
+                if ($State -eq "Disable") {
+                    Stop-Service -Name $svc.Name -Force -Confirm:$false -ErrorAction SilentlyContinue
+                    Set-Service -Name $svc.Name -StartupType Disabled
+                    Write-Host "[X] Disabled: $($svc.Name)" -ForegroundColor Gray
+                } else {
+                    Set-Service -Name $svc.Name -StartupType Manual
+                    Write-Host "[!] Enabled (Manual): $($svc.Name)" -ForegroundColor Green
+                }
+            } catch {
+                Write-Host "[?] Could not change: $($svc.Name) (Protected System Service)" -ForegroundColor Yellow
+            }
+        }
+    }
+}
+
+Clear-Host
+Write-Host "--- Windows Service Optimization ---" -ForegroundColor Cyan
+
+# 1. ALWAYS DISABLE (Your custom 'Ultra-Lean' List)
 $bloat = @(
-    "WSearch", "AxInstSV", "MapsBroker", "DiagTrack", "WerSvc", "dmwappushservice", 
-    "Fax", "PhoneSvc", "RetailDemo", "workfolderssvc", "AssignedAccessManagerSvc", 
-    "diagsvc", "DPS", "WdiServiceHost", "WdiSystemHost", "lfsvc", "SensorService", 
-    "SensorDataService", "SensrSvc", "TrkWks", "fhsvc", "XblAuthManager", 
-    "XblGameSave", "XboxNetApiSvc", "XboxGipSvc", "BcastDVRUserService_*",
-    "HvHost", "vmickvpexchange", "vmicguestinterface", "vmicshutdown", 
-    "vmicheartbeat", "vmicvmsession", "vmicrdv", "vmictimesync", "vmicvss" , "BDESVC"
+    # --- Gaming & Xbox (No Gaming) ---
+    "XblAuthManager", "XblGameSave", "XboxNetApiSvc", "XboxGipSvc", "BcastDVRUserService_*", "GamingServices", "GamingServicesNet",
+    
+    # --- Microsoft Edge (Uninstalled) ---
+    "edgeupdate", "edgeupdatem", "MicrosoftEdgeElevationService",
+    
+    # --- Telemetry, Diagnostics & Beta Testing ---
+    "DiagTrack", "WerSvc", "dmwappushservice", "diagsvc", "wisvc", "DPS", "WdiServiceHost", "WdiSystemHost", 
+    "DiagnosticsHub.StandardCollector.Service", "WSearch", "AxInstSV",
+    
+    # --- Identity & Payments (No Payments/Smart Cards) ---
+    "WalletService", "SEMgrSvc", "EntAppStoreSvc", "SCardSvr", "ScDeviceEnum", "SCPolicySvc", "WpcMonSvc",
+    
+    # --- Backup & Shadow Copies (No Backup) ---
+    "fhsvc", "SDRSVC", "VSS", "wbengine",
+    
+    # --- General Bloat ---
+    "MapsBroker", "Fax", "PhoneSvc", "RetailDemo", "workfolderssvc", "AssignedAccessManagerSvc", 
+    "lfsvc", "SensorService", "SensorDataService", "SensrSvc", "TrkWks", "Wecsvc",
+    
+    # --- Virtualization (Hyper-V) ---
+    "HvHost", "vmickvpexchange", "vmicguestinterface", "vmicshutdown", "vmicheartbeat", 
+    "vmicvmsession", "vmicrdv", "vmictimesync", "vmicvss"
 )
-Write-Host "[*] Automatically disabling background bloat and telemetry..." -ForegroundColor Cyan
+
+Write-Host "[*] Disabling confirmed background bloat..." -ForegroundColor Cyan
 Set-ServiceState -ServiceList $bloat -State "Disable"
 
-# 2. REMOTE DESKTOP ACCESS
-$rdpChoice = Read-Host "Do you use Remote Desktop (Control this PC from another device)? (Y/N)"
-if ($rdpChoice -eq "N") {
+# 2. REMOTE DESKTOP
+if ((Read-Host "Do you use Remote Desktop (Control this PC from another device)? (Y/N)") -ne "Y") {
     Set-ServiceState -ServiceList @("TermService", "SessionEnv", "UmRdpService", "RemoteRegistry") -State "Disable"
 }
 
 # 3. PRINTERS
-$printChoice = Read-Host "Do you use a Printer? (Y/N)"
-if ($printChoice -eq "N") {
+if ((Read-Host "Do you use a Printer? (Y/N)") -ne "Y") {
     Set-ServiceState -ServiceList @("Spooler", "PrintNotify") -State "Disable"
 }
 
-# 4. TOUCH KEYBOARD & HANDWRITING
-$touchChoice = Read-Host "Do you use a Touch Screen or Stylus Pen? (Y/N)"
-if ($touchChoice -eq "N") {
-    Set-ServiceState -ServiceList @("TabletInputService") -State "Disable"
+# 4. TOUCH & BIOMETRICS
+if ((Read-Host "Do you use a Touch Screen, Stylus, or Face/Fingerprint login? (Y/N)") -ne "Y") {
+    Set-ServiceState -ServiceList @("TabletInputService", "WbioSrvc") -State "Disable"
 }
 
 # 5. BLUETOOTH
-$btChoice = Read-Host "Do you use Bluetooth (Mouse, Keyboard, or Headphones)? (Y/N)"
-if ($btChoice -eq "N") {
+if ((Read-Host "Do you use Bluetooth (Mouse/Headphones)? (Y/N)") -eq "Y") {
+    Set-ServiceState -ServiceList @("bthserv", "BTAGService", "BthAvctpSvc", "BluetoothUserService_*") -State "Manual"
+} else {
     Set-ServiceState -ServiceList @("bthserv", "BTAGService", "BthAvctpSvc", "BluetoothUserService_*") -State "Disable"
 }
-elseif ($btChoice -eq "Y") {
-    Set-ServiceState -ServiceList @("bthserv", "BTAGService", "BthAvctpSvc", "BluetoothUserService_*") -State "Enable"
-}
-else {
-    Write-Host "Invalid choice. Please enter Y or N."
-}
 
-# 6. BIOMETRICS
-$bioChoice = Read-Host "Do you use Fingerprint or Face ID to login? (Y/N)"
-if ($bioChoice -eq "N") {
-    Set-ServiceState -ServiceList @("WbioSrvc") -State "Disable"
-}
-
-# 7. MICROSOFT STORE
-$storeChoice = Read-Host "Do you use the Microsoft Store and Store Apps (Calculator/Photos)? (Y/N)"
-if ($storeChoice -eq "Y") {
-    Set-ServiceState -ServiceList @("AppXSvc", "StoreSvc", "ClipSVC", "LicenseManager") -State "Enable"
+# 6. MICROSOFT STORE
+if ((Read-Host "Do you use the Microsoft Store (Calculator/Photos)? (Y/N)") -eq "Y") {
+    Set-ServiceState -ServiceList @("AppXSvc", "StoreSvc", "ClipSVC", "LicenseManager") -State "Manual"
 } else {
     Set-ServiceState -ServiceList @("AppXSvc", "StoreSvc", "ClipSVC", "LicenseManager") -State "Disable"
 }
 
-# 8. WINDOWS UPDATE & SECURITY
-$wuChoice = Read-Host "Do you want to keep Windows Update and BitLocker Security? (Y/N)"
-if ($wuChoice -eq "Y") {
-    Set-ServiceState -ServiceList @("wuauserv", "UsoSvc", "BITS", "BDESVC") -State "Enable"
-} else {
+# 7. WINDOWS UPDATE & SECURITY
+if ((Read-Host "Keep Windows Update and BitLocker enabled? (Y/N)") -ne "Y") {
     Set-ServiceState -ServiceList @("wuauserv", "UsoSvc", "BITS", "BDESVC", "WaaSMedicSvc") -State "Disable"
 }
 
-# 9. NETWORKING HELPERS (IPv6 & Netlogon)
-$netChoice = Read-Host "Disable advanced Networking (IPv6 Helper/Netlogon)? (Y/N)"
-if ($netChoice -eq "Y") {
+# 8. NETWORKING HELPERS
+if ((Read-Host "Disable advanced Networking (IPv6 Helper/Netlogon)? (Y/N)") -eq "Y") {
     Set-ServiceState -ServiceList @("iphlpsvc", "Netlogon") -State "Disable"
 }
 
@@ -2087,4 +2117,5 @@ Write-Host "`n [>] Process finished. Opening folder..." -ForegroundColor Gray
 Start-Process explorer.exe $folder
 Write-Host " Press any key to exit..." -ForegroundColor Gray
 $null = [Console]::ReadKey($true)
+
 
