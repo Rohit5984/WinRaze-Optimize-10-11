@@ -234,50 +234,88 @@ if ((Read-Host "Disable advanced Networking (IPv6 Helper/Netlogon)? (Y/N)") -eq 
     Set-ServiceState -ServiceList @("iphlpsvc", "Netlogon") -State "Disable"
 }
 
-# Ask the user if they want to enable or disable camera and microphone access
-$choice = Read-Host "Do you want Camera & Microphone? (Y/N)"
+# Interactive Input for Camera and Microphone Control
+$choice = Read-Host "Do you want to enable Camera & Microphone? (Y/N)"
+
+# Common Registry Path for Privacy Policies
+$policyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy"
+
+# Ensure the policy directory exists
+if (-not (Test-Path $policyPath)) {
+    New-Item -Path $policyPath -Force | Out-Null
+}
 
 if ($choice -eq "Y") {
-    Write-Output "--- Enabling Camera and Microphone Permanently ---"
+    Write-Output "--- Enabling Camera and Microphone (Removing Restrictions) ---"
 
-    # Enable Camera
-    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" -Name "LetAppsAccessCamera" -ErrorAction SilentlyContinue
-    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam" -Name "Value" -ErrorAction SilentlyContinue
-    Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{E5323777-F976-4f5b-9B55-B94699C46E44}" -Name "Value" -ErrorAction SilentlyContinue
+    # GPO Policies ko remove karna sabse best practice hai "Organization lock" hatane ke liye
+    $params = @('LetAppsAccessCamera', 'LetAppsAccessMicrophone')
+    foreach ($param in $params) {
+        Remove-ItemProperty -Path $policyPath -Name $param -ErrorAction SilentlyContinue
+    }
 
-    # Enable Microphone
-    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" -Name "LetAppsAccessMicrophone" -ErrorAction SilentlyContinue
-    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone" -Name "Value" -ErrorAction SilentlyContinue
-    Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{2EEF81BE-33FA-4800-9670-1CD474972C3F}" -Name "Value" -ErrorAction SilentlyContinue
-    Write-Output "Camera and microphone have been permanently enabled."
+    # Setting User-level access to 'Allow'
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam" -Name "Value" -Value "Allow" -Type String -ErrorAction SilentlyContinue
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone" -Name "Value" -Value "Allow" -Type String -ErrorAction SilentlyContinue
 
-    # Restore Permissions to Allow Future Changes
-    icacls "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" /grant Administrators:F
-    icacls "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam" /grant Administrators:F
-    icacls "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone" /grant Administrators:F
+    Write-Output "SUCCESS: Camera and Microphone are now ENABLED and user-controlled."
 }
 elseif ($choice -eq "N") {
-    Write-Output "--- Disabling Camera and Microphone Permanently ---"
+    Write-Output "--- Disabling Camera and Microphone (Applying GPO Lock) ---"
 
-    # Disable Camera
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" -Name "LetAppsAccessCamera" -Value 2 -Type DWord
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam" -Name "Value" -Value "Deny" -Type String
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{E5323777-F976-4f5b-9B55-B94699C46E44}" -Name "Value" -Value "Deny" -Type String
+    # Value 2 = Force Deny (Standard modern policy logic)
+    Set-ItemProperty -Path $policyPath -Name "LetAppsAccessCamera" -Value 2 -Type DWord
+    Set-ItemProperty -Path $policyPath -Name "LetAppsAccessMicrophone" -Value 2 -Type DWord
 
-    # Disable Microphone
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" -Name "LetAppsAccessMicrophone" -Value 2 -Type DWord
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone" -Name "Value" -Value "Deny" -Type String
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{2EEF81BE-33FA-4800-9670-1CD474972C3F}" -Name "Value" -Value "Deny" -Type String
+    # Strictly Denying at the ConsentStore level
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam" -Name "Value" -Value "Deny" -Type String -ErrorAction SilentlyContinue
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone" -Name "Value" -Value "Deny" -Type String -ErrorAction SilentlyContinue
 
-    Write-Output "Camera and microphone have been permanently disabled."
-
-    # Lock Registry Modifications to Prevent Any Changes
-    icacls "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" /deny Administrators:F
-    icacls "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam" /deny Administrators:F
-    icacls "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone" /deny Administrators:F
+    Write-Output "SUCCESS: Camera and Microphone have been LOCKED (Disabled)."
 }
 else {
-    Write-Output "Invalid input. Please enter 'Y' to enable or 'N' to disable."
+    Write-Warning "Invalid input! Please run the script again and enter 'Y' or 'N'."
+}
+
+# Ask the user for action
+$choice = Read-Host "Do you want to enable Voice Activation? (Y/N)"
+
+$appPrivacyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy"
+$voiceSettingsPath = "HKCU:\Software\Microsoft\Speech_OneCore\Settings\VoiceActivation\UserPreferenceForAllApps"
+
+if ($choice -eq "Y") {
+    Write-Output "--- Enabling Voice Activation (Giving Control back to User) ---"
+
+    # 1. HKLM Policy se restrictions hatana (Remove "Organization" lock)
+    $policyNames = @('LetAppsActivateWithVoice', 'LetAppsActivateWithVoiceAboveLock')
+    foreach ($name in $policyNames) {
+        Remove-ItemProperty -Path $appPrivacyPath -Name $name -ErrorAction SilentlyContinue
+    }
+
+    # 2. User Level settings ko enable karna
+    if (-not (Test-Path $voiceSettingsPath)) { New-Item -Path $voiceSettingsPath -Force | Out-Null }
+    Set-ItemProperty -Path $voiceSettingsPath -Name "AgentActivationEnabled" -Value 1 -Type DWord
+    Set-ItemProperty -Path $voiceSettingsPath -Name "AgentActivationOnLockScreenEnabled" -Value 1 -Type DWord
+
+    Write-Output "SUCCESS: Voice Activation is now ENABLED. You can manage it in Settings."
+}
+elseif ($choice -eq "N") {
+    Write-Output "--- Disabling Voice Activation (Locking System) ---"
+
+    # 1. System-wide Policy Apply karna (Force Deny = 2)
+    if (-not (Test-Path $appPrivacyPath)) { New-Item -Path $appPrivacyPath -Force | Out-Null }
+    Set-ItemProperty -Path $appPrivacyPath -Name "LetAppsActivateWithVoice" -Value 2 -Type DWord
+    Set-ItemProperty -Path $appPrivacyPath -Name "LetAppsActivateWithVoiceAboveLock" -Value 2 -Type DWord
+
+    # 2. User Preference ko Disable karna (0 = Off)
+    if (-not (Test-Path $voiceSettingsPath)) { New-Item -Path $voiceSettingsPath -Force | Out-Null }
+    Set-ItemProperty -Path $voiceSettingsPath -Name "AgentActivationEnabled" -Value 0 -Type DWord
+    Set-ItemProperty -Path $voiceSettingsPath -Name "AgentActivationOnLockScreenEnabled" -Value 0 -Type DWord
+
+    Write-Output "SUCCESS: Voice Activation has been DISABLED and Locked."
+}
+else {
+    Write-Warning "Invalid selection. Please enter Y or N."
 }
 
 # --- Notification Privacy Choice ---
@@ -564,56 +602,6 @@ If (-Not (Test-Path $bluetoothSyncKeyPath)) {
 }
 Set-ItemProperty -Path $bluetoothSyncKeyPath -Name 'Value' -Value $data
 Write-Output "Access to 'Unpaired Bluetooth Devices' has been set to 'Deny'."
-
-# Disable app access to voice activation
-Write-Output "--- Disabling app access to 'Voice Activation' ---"
-$appPrivacyKeyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy'
-
-If (-Not (Test-Path $appPrivacyKeyPath)) {
-    New-Item -Path $appPrivacyKeyPath -ItemType Directory | Out-Null
-}
-
-# Set 'LetAppsActivateWithVoice' to '2'
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsActivateWithVoice' -Value 2 -Type DWord
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsActivateWithVoice_UserInControlOfTheseApps' -Value $null -Type MultiString
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsActivateWithVoice_ForceAllowTheseApps' -Value $null -Type MultiString
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsActivateWithVoice_ForceDenyTheseApps' -Value $null -Type MultiString
-Write-Output "Access to 'Voice Activation' settings has been modified through GPO."
-
-# Disable voice activation for all apps
-$voiceActivationKeyPath = 'HKCU:\Software\Microsoft\Speech_OneCore\Settings\VoiceActivation\UserPreferenceForAllApps'
-$data = 0
-
-If (-Not (Test-Path $voiceActivationKeyPath)) {
-    New-Item -Path $voiceActivationKeyPath -ItemType Directory | Out-Null
-}
-Set-ItemProperty -Path $voiceActivationKeyPath -Name 'AgentActivationEnabled' -Value $data -Type DWord
-Write-Output "Voice activation has been disabled for all apps."
-
-# Disable app access to voice activation on locked system
-Write-Output "--- Disabling app access to 'Voice Activation on Locked System' ---"
-$appPrivacyKeyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy'
-
-If (-Not (Test-Path $appPrivacyKeyPath)) {
-    New-Item -Path $appPrivacyKeyPath -ItemType Directory | Out-Null
-}
-
-# Set 'LetAppsActivateWithVoiceAboveLock' to '2'
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsActivateWithVoiceAboveLock' -Value 2 -Type DWord
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsActivateWithVoiceAboveLock_UserInControlOfTheseApps' -Value $null -Type MultiString
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsActivateWithVoiceAboveLock_ForceAllowTheseApps' -Value $null -Type MultiString
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsActivateWithVoiceAboveLock_ForceDenyTheseApps' -Value $null -Type MultiString
-Write-Output "Access to 'Voice Activation Above Lock' settings has been modified through GPO."
-
-# Disable voice activation on locked system for all apps
-$voiceActivationKeyPath = 'HKCU:\Software\Microsoft\Speech_OneCore\Settings\VoiceActivation\UserPreferenceForAllApps'
-$data = 0
-
-If (-Not (Test-Path $voiceActivationKeyPath)) {
-    New-Item -Path $voiceActivationKeyPath -ItemType Directory | Out-Null
-}
-Set-ItemProperty -Path $voiceActivationKeyPath -Name 'AgentActivationOnLockScreenEnabled' -Value $data -Type DWord
-Write-Output "Voice activation on lock screen has been disabled for all apps."
 
 # Disable app access to location
 Write-Output "--- Disabling app access to 'Location' ---"
@@ -981,39 +969,44 @@ If (-Not (Test-Path $guidKeyPath)) {
 Set-ItemProperty -Path $guidKeyPath -Name 'Value' -Value $data
 Write-Output "Access to GUID {A8804298-2D5F-42E3-9531-9C8C39EB29CE} has been set to 'Deny'."
 
-# Disable app access to physical movement
-Write-Output "--- Disabling app access to 'Physical Movement' ---"
-$appPrivacyKeyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy'
+# Take Input from User 
+$choice = Read-Host "Do you want to enable Physical Movement/Spatial Perception? (Y/N)"
 
-If (-Not (Test-Path $appPrivacyKeyPath)) {
-    New-Item -Path $appPrivacyKeyPath -ItemType Directory | Out-Null
+$policyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy"
+$spatialPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\spatialPerception"
+$bgSpatialPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\backgroundSpatialPerception"
+
+if ($choice -eq "Y") {
+    Write-Output "--- Enabling Physical Movement Access (Removing Restrictions) ---"
+
+    # 1. HKLM Policy se restrictions delete karna (Organization lock hatana)
+    Remove-ItemProperty -Path $policyPath -Name "LetAppsAccessBackgroundSpatialPerception" -ErrorAction SilentlyContinue
+
+    # 2. ConsentStore mein "Allow" set karna
+    Set-ItemProperty -Path $spatialPath -Name "Value" -Value "Allow" -Type String -ErrorAction SilentlyContinue
+    Set-ItemProperty -Path $bgSpatialPath -Name "Value" -Value "Allow" -Type String -ErrorAction SilentlyContinue
+
+    Write-Output "SUCCESS: Physical Movement access is now ENABLED."
 }
+elseif ($choice -eq "N") {
+    Write-Output "--- Disabling Physical Movement Access (Applying GPO Lock) ---"
 
-# Set 'LetAppsAccessBackgroundSpatialPerception' to '2'
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsAccessBackgroundSpatialPerception' -Value 2 -Type DWord
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsAccessBackgroundSpatialPerception_UserInControlOfTheseApps' -Value $null -Type MultiString
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsAccessBackgroundSpatialPerception_ForceAllowTheseApps' -Value $null -Type MultiString
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsAccessBackgroundSpatialPerception_ForceDenyTheseApps' -Value $null -Type MultiString
-Write-Output "Access to 'Background Spatial Perception' settings has been modified through GPO."
+    # 1. System-wide Policy Apply karna (Value 2 = Force Deny)
+    if (-not (Test-Path $policyPath)) { New-Item -Path $policyPath -Force | Out-Null }
+    Set-ItemProperty -Path $policyPath -Name "LetAppsAccessBackgroundSpatialPerception" -Value 2 -Type DWord
 
-# Disable spatialPerception capability
-$spatialPerceptionKeyPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\spatialPerception'
-$data = 'Deny'
+    # 2. ConsentStore mein "Deny" set karna
+    if (-not (Test-Path $spatialPath)) { New-Item -Path $spatialPath -Force | Out-Null }
+    if (-not (Test-Path $bgSpatialPath)) { New-Item -Path $bgSpatialPath -Force | Out-Null }
+    
+    Set-ItemProperty -Path $spatialPath -Name "Value" -Value "Deny" -Type String
+    Set-ItemProperty -Path $bgSpatialPath -Name "Value" -Value "Deny" -Type String
 
-If (-Not (Test-Path $spatialPerceptionKeyPath)) {
-    New-Item -Path $spatialPerceptionKeyPath -ItemType Directory | Out-Null
+    Write-Output "SUCCESS: Physical Movement access has been LOCKED (Disabled)."
 }
-Set-ItemProperty -Path $spatialPerceptionKeyPath -Name 'Value' -Value $data
-Write-Output "Capability 'Spatial Perception' access has been set to 'Deny'."
-
-# Disable backgroundSpatialPerception capability
-$backgroundSpatialPerceptionKeyPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\backgroundSpatialPerception'
-
-If (-Not (Test-Path $backgroundSpatialPerceptionKeyPath)) {
-    New-Item -Path $backgroundSpatialPerceptionKeyPath -ItemType Directory | Out-Null
+else {
+    Write-Warning "Invalid input! Please enter 'Y' or 'N'."
 }
-Set-ItemProperty -Path $backgroundSpatialPerceptionKeyPath -Name 'Value' -Value $data
-Write-Output "Capability 'Background Spatial Perception' access has been set to 'Deny'."
 
 # Disable app access to eye tracking
 Write-Output "--- Disabling app access to 'Eye Tracking' ---"
@@ -1107,30 +1100,41 @@ If (-Not (Test-Path $graphicsCaptureWithoutBorderKeyPath)) {
 Set-ItemProperty -Path $graphicsCaptureWithoutBorderKeyPath -Name 'Value' -Value $data
 Write-Output "Capability 'Graphics Capture Without Borders' access has been set to 'Deny'."
 
-# Disable app access to background activity
-Write-Output "--- Disabling app access to 'Background Activity' ---"
-$appPrivacyKeyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy'
+# User input for Background Apps
+$choice = Read-Host "Do you want to allow apps to run in the background? (Y/N)"
 
-If (-Not (Test-Path $appPrivacyKeyPath)) {
-    New-Item -Path $appPrivacyKeyPath -ItemType Directory | Out-Null
+$policyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy"
+$userPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications"
+
+if ($choice -eq "Y") {
+    Write-Output "--- Enabling Background Apps (Giving Control back to User) ---"
+
+    # 1. HKLM Policy se 'LetAppsRunInBackground' lock hatana
+    Remove-ItemProperty -Path $policyPath -Name "LetAppsRunInBackground" -ErrorAction SilentlyContinue
+
+    # 2. Global User Preference ko enable karna
+    # GlobalUserDisabled = 0 matlab feature ON hai
+    if (-not (Test-Path $userPath)) { New-Item -Path $userPath -Force | Out-Null }
+    Set-ItemProperty -Path $userPath -Name "GlobalUserDisabled" -Value 0 -Type DWord
+
+    Write-Output "SUCCESS: Background Apps are now ENABLED. You can manage them in Settings > Privacy."
 }
+elseif ($choice -eq "N") {
+    Write-Output "--- Disabling All Background Apps (Applying System Lock) ---"
 
-# Set 'LetAppsRunInBackground' to '2'
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsRunInBackground' -Value 2 -Type DWord
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsRunInBackground_UserInControlOfTheseApps' -Value $null -Type MultiString
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsRunInBackground_ForceAllowTheseApps' -Value $null -Type MultiString
-Set-ItemProperty -Path $appPrivacyKeyPath -Name 'LetAppsRunInBackground_ForceDenyTheseApps' -Value $null -Type MultiString
-Write-Output "Access to 'Background Activity' settings has been modified through GPO."
+    # 1. System-wide Policy Apply karna (Value 2 = Force Deny)
+    if (-not (Test-Path $policyPath)) { New-Item -Path $policyPath -Force | Out-Null }
+    Set-ItemProperty -Path $policyPath -Name "LetAppsRunInBackground" -Value 2 -Type DWord
 
-# Disable global user background activity
-$backgroundAccessKeyPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications'
-$data = 1
+    # 2. User level par bhi Global Disable set karna (Value 1 = Disabled)
+    if (-not (Test-Path $userPath)) { New-Item -Path $userPath -Force | Out-Null }
+    Set-ItemProperty -Path $userPath -Name "GlobalUserDisabled" -Value 1 -Type DWord
 
-If (-Not (Test-Path $backgroundAccessKeyPath)) {
-    New-Item -Path $backgroundAccessKeyPath -ItemType Directory | Out-Null
+    Write-Output "SUCCESS: All Background Apps have been DISABLED and Locked."
 }
-Set-ItemProperty -Path $backgroundAccessKeyPath -Name 'GlobalUserDisabled' -Value $data -Type DWord
-Write-Output "Global background activity access has been disabled."
+else {
+    Write-Warning "Invalid input! Please enter 'Y' or 'N'."
+}
 
 # Disable Windows Feedback Collection
 
@@ -2127,6 +2131,7 @@ Write-Host "`n [>] Process finished. Opening folder..." -ForegroundColor Gray
 Start-Process explorer.exe $folder
 Write-Host " Press any key to exit..." -ForegroundColor Gray
 $null = [Console]::ReadKey($true)
+
 
 
 
