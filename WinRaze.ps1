@@ -214,12 +214,22 @@ if ((Read-Host "Do you use the Microsoft Store (Calculator/Photos)? (Y/N)") -eq 
     Set-ServiceState -ServiceList @("AppXSvc", "StoreSvc", "ClipSVC", "LicenseManager") -State "Disable"
 }
 
-# 7. WINDOWS UPDATE & SECURITY
-if ((Read-Host "Keep Windows Update and BitLocker enabled? (Y/N)") -ne "Y") {
-    Set-ServiceState -ServiceList @("wuauserv", "UsoSvc", "BITS", "BDESVC", "WaaSMedicSvc") -State "Disable"
+# 7. WINDOWS UPDATE
+if ((Read-Host "Keep Windows Update enabled? (Y/N)") -eq "Y") {
+    # If YES, ensure they are set to Manual or Automatic so they can run
+    Set-ServiceState -ServiceList @("wuauserv", "UsoSvc", "BITS", "WaaSMedicSvc") -State "Manual"
+} else {
+    # If NO, Disable them
+    Set-ServiceState -ServiceList @("wuauserv", "UsoSvc", "BITS", "WaaSMedicSvc") -State "Disable"
 }
 
-# 8. NETWORKING HELPERS
+# 8. BITLOCKER 
+if ((Read-Host "Keep BitLocker enabled? (Y/N)") -ne "Y") {
+    # If NOT YES, Disable it
+    Set-ServiceState -ServiceList @("BDESVC") -State "Disable"
+}
+
+# 9. NETWORKING HELPERS
 if ((Read-Host "Disable advanced Networking (IPv6 Helper/Netlogon)? (Y/N)") -eq "Y") {
     Set-ServiceState -ServiceList @("iphlpsvc", "Netlogon") -State "Disable"
 }
@@ -2117,6 +2127,7 @@ Write-Host "`n [>] Process finished. Opening folder..." -ForegroundColor Gray
 Start-Process explorer.exe $folder
 Write-Host " Press any key to exit..." -ForegroundColor Gray
 $null = [Console]::ReadKey($true)
+
 
 
 
