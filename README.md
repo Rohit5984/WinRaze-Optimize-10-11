@@ -2,10 +2,6 @@
   <img src="assets/Rohit.png" width="400" alt="Rohit">
 </p>
 <p align="center">
-  <strong>Special Highlight: Rohit</strong>
-</p>
-
-<p align="center">
   <img src="assets/Essential.png" width="400" alt="Essential">
   <img src="assets/Advanced.png" width="400" alt="Advanced">
 </p>
