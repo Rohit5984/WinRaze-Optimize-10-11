@@ -1,4 +1,18 @@
-![Performance](Performance.png)
+<p align="center">
+  <img src="assets/Essential.png" width="400" alt="Essential">
+  <img src="assets/Advanced.png" width="400" alt="Advanced">
+</p>
+<p align="center">
+  <strong>Essential</strong> &nbsp;&nbsp;&nbsp; <strong>Advanced</strong>
+</p>
+
+<p align="center">
+  <img src="assets/Mine.png" width="400" alt="Mine">
+  <img src="assets/Performance.png" width="400" alt="Performance">
+</p>
+<p align="center">
+  <strong>Mine</strong> &nbsp;&nbsp;&nbsp; <strong>Performance</strong>
+</p>
 
 # 🌌 WinRaze [Nexus Edition]
 ### Universal Optimization Suite for Windows 10 & 11
