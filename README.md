@@ -1,3 +1,5 @@
+![Alt text](WinRaze-Optimize-10-11/performance.png)
+
 # 🌌 WinRaze [Nexus Edition]
 ### Universal Optimization Suite for Windows 10 & 11
 
