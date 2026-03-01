@@ -20,8 +20,23 @@
   <img src="assets/Performance.png" width="400" alt="Performance">
 </p>
 <p align="center">
-  <strong>Step 2: System Performance Tweaks</strong><br>
+  <strong>Step 2: System Performance Tweaks – Virtual Memory</strong><br>
   Press <kbd>Windows + R</kbd>, type <code>SystemPropertiesPerformance</code> and hit <kbd>Enter</kbd>.<br>
+  Follow image 4, then go to <strong>Advanced → Virtual Memory → Change…</strong> window:<br>
+  - Uncheck <strong>Automatically manage paging file size</strong>.<br>
+  - Select your system drive (usually C:) → choose <strong>Custom size</strong>.<br>
+  - Set the recommended sizes based on your RAM:
+</p>
+
+<p align="center">
+  <strong>Examples:</strong><br>
+  - <strong>8 GB RAM</strong> → Initial = 12 GB, Maximum = 24 GB<br>
+  - <strong>16 GB RAM</strong> → Initial = 24 GB, Maximum = 48 GB<br>
+  - <strong>32 GB RAM</strong> → Initial = 48 GB, Maximum = 96 GB
+</p>
+
+<p align="center">
+  Click <strong>Set → OK → Restart</strong> to apply.<br>
   Follow the steps shown in <strong>Performance.png</strong>.
 </p>
 
