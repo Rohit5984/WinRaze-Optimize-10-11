@@ -36,8 +36,25 @@
 </p>
 
 <p align="center">
-  Click <strong>Set → OK → Restart</strong> to apply.<br>
+  Click <strong>Set → OK </strong> to apply.<br>
   Follow the steps shown in <strong>Performance.png</strong>.
+</p>
+
+<p align="center">
+  <strong>Final Step: Disable Unnecessary Startup Services</strong><br>
+  Press <kbd>Windows + R</kbd>, type <code>msconfig</code>, and hit <kbd>Enter</kbd>.<br>
+  Go to the <strong>Services</strong> tab.<br>
+  ✔ Check <strong>Hide all Microsoft services</strong>.<br>
+  ✔ Disable unnecessary third-party services only.<br>
+  Click <strong>Apply → OK</strong>.
+</p>
+
+<p align="center">
+  <img src="assets/msconfig.png" width="400" alt="MSConfig">
+</p>
+
+<p align="center">
+  <strong>Restart your laptop to apply all changes.</strong>
 </p>
 
 # 🌌 WinRaze [Nexus Edition]
