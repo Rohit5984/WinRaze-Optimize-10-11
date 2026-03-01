@@ -10,12 +10,10 @@
 
 ---
 
-🛠 S-Rank Features
-🔥 Neural-Raze (Service Optimization): Surgical disabling of non-essential background services (Xbox, Telemetry, Hyper-V, Biometrics) to reduce CPU interrupts.
-
-🛡️ Ghost Protocol (Privacy Hardening): Hard-locks Registry keys to block intrusive background permissions like Location, Call History, and Contacts.
-
-💠 Nexus Interface: A high-contrast, stylized terminal experience designed for the modern operator.
+## 🛠 S-Rank Features
+* **🔥 Neural-Raze:** Force-shuts unnecessary background services and optimizes the kernel for ultra-low latency.
+* **🛡️ Ghost Protocol (Privacy Hardening):** Hard-locks Registry keys to block intrusive background permissions like Location, Call History, and Contacts.
+* **💠 Nexus Interface:** A high-contrast, stylized terminal experience designed for the modern operator.
 
 ---
 
