@@ -1,20 +1,28 @@
 <p align="center">
-  <img src="assets/Rohit.png" width="400" alt="Rohit">
+  <img src="assets/Rohit.png" width="400" alt="WinRaze">
 </p>
 <p align="center">
-  <img src="assets/Essential.png" width="400" alt="Essential">
-  <img src="assets/Advanced.png" width="400" alt="Advanced">
-</p>
-<p align="center">
-  <strong>Essential</strong> &nbsp;&nbsp;&nbsp; <strong>Advanced</strong>
+  <strong>Our Top Software: WinRaze</strong>
 </p>
 
+<!-- Step 1: WinUtil images -->
 <p align="center">
-  <img src="assets/Mine.png" width="400" alt="Mine">
+  <img src="assets/Essential.png" width="300" alt="Essential">
+  <img src="assets/Advanced.png" width="300" alt="Advanced">
+  <img src="assets/Mine.png" width="300" alt="Mine">
+</p>
+<p align="center">
+  <strong>Step 1: These 3 images are from WinUtil.ps1</strong>
+</p>
+
+<!-- Step 2: Performance tweaks -->
+<p align="center">
   <img src="assets/Performance.png" width="400" alt="Performance">
 </p>
 <p align="center">
-  <strong>Mine</strong> &nbsp;&nbsp;&nbsp; <strong>Performance</strong>
+  <strong>Step 2: System Performance Tweaks</strong><br>
+  Press <kbd>Windows + R</kbd>, type <code>SystemPropertiesPerformance</code> and hit <kbd>Enter</kbd>.<br>
+  Follow the steps shown in <strong>Performance.png</strong>.
 </p>
 
 # 🌌 WinRaze [Nexus Edition]
