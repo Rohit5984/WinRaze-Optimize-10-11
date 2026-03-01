@@ -2,7 +2,7 @@
   <img src="assets/Rohit.png" width="400" alt="WinRaze">
 </p>
 <p align="center">
-  <strong>Our Top Software: WinRaze</strong>
+  <strong>WinRaze – Nexus Edition</strong>
 </p>
 
 <!-- Step 1: WinUtil images -->
