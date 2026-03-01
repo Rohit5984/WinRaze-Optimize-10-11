@@ -30,9 +30,9 @@
 
 <p align="center">
   <strong>Examples:</strong><br>
-  - <strong>8 GB RAM</strong> → Initial = 12 GB, Maximum = 24 GB<br>
-  - <strong>16 GB RAM</strong> → Initial = 24 GB, Maximum = 48 GB<br>
-  - <strong>32 GB RAM</strong> → Initial = 48 GB, Maximum = 96 GB
+  - <strong>8 GB RAM</strong> → Initial = 12 GB (12 × 1024 = 12288 MB), Maximum = 24 GB (24 × 1024 = 24576 MB)<br>
+  - <strong>16 GB RAM</strong> → Initial = 24 GB (24 × 1024 = 24576 MB), Maximum = 48 GB (48 × 1024 = 49152 MB)<br>
+  - <strong>32 GB RAM</strong> → Initial = 48 GB (48 × 1024 = 49152 MB), Maximum = 96 GB (96 × 1024 = 98304 MB)
 </p>
 
 <p align="center">
