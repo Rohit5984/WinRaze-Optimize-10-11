@@ -58,11 +58,11 @@
 | `HKLM\...\Tasks\Games` | `Priority` | `2 → 6` |
 
 <p align="center">
+  <strong>Final Step: Disable Unnecessary Startup Services</strong><br>
+  <p align="center">
   <img src="assets/msconfig.png" width="400" alt="MSConfig">
 </p>
 
-<p align="center">
-  <strong>Final Step: Disable Unnecessary Startup Services</strong><br>
   Press <kbd>Windows + R</kbd>, type <code>msconfig</code>, and press <kbd>Enter</kbd>.<br>
   Go to the <strong>Services</strong> tab.<br>
   ✔ Check <strong>Hide all Microsoft services</strong>.<br>
