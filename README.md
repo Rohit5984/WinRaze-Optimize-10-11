@@ -45,13 +45,8 @@
 
 <!-- Step 3: Registry Tweaks -->
 <p align="center">
-  <img src="assets/Registry.png" width="400" alt="Registry Tweaks">
-</p>
-
-<p align="center">
   <strong>Step 3: Registry Performance Tweaks</strong><br>
   Press <kbd>Windows + R</kbd>, type <code>regedit</code>, and press <kbd>Enter</kbd>.<br>
-  Apply the registry changes shown in <strong>Registry.png</strong>.
 </p>
 
 | Registry Path | Value | Change |
@@ -61,11 +56,6 @@
 | `HKLM\...\SystemProfile` | `SystemResponsiveness` | `14 → 0` |
 | `HKLM\...\Tasks\Games` | `GPU Priority` | `8` |
 | `HKLM\...\Tasks\Games` | `Priority` | `2 → 6` |
-
-<p align="center">
-  <strong>Important</strong>: Be careful when editing the registry. Back up the registry or create a system restore point before making changes.<br>
-  <strong>Restart your PC after applying these registry changes.</strong>
-</p>
 
 <p align="center">
   <img src="assets/msconfig.png" width="400" alt="MSConfig">
