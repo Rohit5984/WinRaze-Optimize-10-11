@@ -74,6 +74,12 @@
   <strong>Restart your computer to apply all changes.</strong>
 </p>
 
+<p align="center">
+  <strong>BatteryMode</strong><br>
+  <p align="center">
+  <img src="assets/battery.png" width="400" alt="Battery">
+</p>
+
 # 🌌 WinRaze Nexus Edition
 ### Universal Optimization Suite for Windows 10 and 11
 
