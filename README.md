@@ -40,64 +40,31 @@
   Follow the steps shown in <strong>Performance.png</strong>.
 </p>
 
-```html
+```markdown
+<!-- Step 3: Registry Tweaks -->
 <p align="center">
   <img src="assets/Registry.png" width="400" alt="Registry Tweaks">
 </p>
 
 <p align="center">
   <strong>Step 3: Registry Performance Tweaks</strong><br>
-  Press <kbd>Windows + R</kbd>, type <code>regedit</code>, and press <kbd>Enter</kbd>.<br>
-  Navigate to the following registry paths and change the values:
+  Press <kbd>Windows + R</kbd>, type <code>regedit</code>, then press <kbd>Enter</kbd>.<br>
+  Apply the following registry changes shown in <strong>Registry.png</strong>.
 </p>
 
-<h3>Mouse Hover Time</h3>
-
-<pre>
-Path:
-HKEY_CURRENT_USER\Control Panel\Mouse
-
-MouseHoverTime
-400 → 10
-</pre>
-
-<h3>Menu Show Delay</h3>
-
-<pre>
-Path:
-HKEY_CURRENT_USER\Control Panel\Desktop
-
-MenuShowDelay
-400 → 10
-</pre>
-
-<h3>System Responsiveness</h3>
-
-<pre>
-Path:
-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile
-
-SystemResponsiveness
-14 → 0
-</pre>
-
-<h3>Games Task Priority</h3>
-
-<pre>
-Path:
-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games
-
-GPU Priority
-8 → 8
-
-Priority
-2 → 6
-</pre>
+| Registry Path | Value | Change |
+| :------------ | :---- | :----- |
+| `HKCU\Control Panel\Mouse` | `MouseHoverTime` | `400 → 10` |
+| `HKCU\Control Panel\Desktop` | `MenuShowDelay` | `400 → 10` |
+| `HKLM\...\SystemProfile` | `SystemResponsiveness` | `14 → 0` |
+| `HKLM\...\Tasks\Games` | `GPU Priority` | `8` *(leave as is)* |
+| `HKLM\...\Tasks\Games` | `Priority` | `2 → 6` |
 
 <p align="center">
   <strong>Restart your PC after applying these registry changes.</strong>
 </p>
 ```
+
 
 
 <p align="center">
