@@ -53,9 +53,9 @@
 | :------------ | :---- | :----- |
 | `HKCU\Control Panel\Mouse` | `MouseHoverTime` | `400 → 10` |
 | `HKCU\Control Panel\Desktop` | `MenuShowDelay` | `400 → 10` |
-| `HKLM\...\SystemProfile` | `SystemResponsiveness` | `14 → 0` |
-| `HKLM\...\Tasks\Games` | `GPU Priority` | `8` |
-| `HKLM\...\Tasks\Games` | `Priority` | `2 → 6` |
+| `Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile` | `SystemResponsiveness` | `14 → 0` |
+| `Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games` | `GPU Priority` | `8` |
+| `Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games` | `Priority` | `2 → 6` |
 
 <p align="center">
   <strong>Final Step: Disable Unnecessary Startup Services</strong><br>
