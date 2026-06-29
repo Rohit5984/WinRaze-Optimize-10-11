@@ -40,7 +40,65 @@
   Follow the steps shown in <strong>Performance.png</strong>.
 </p>
 
-<p align="center"> <img src="assets/Registry.png" width="400" alt="Registry Tweaks"> </p> <p align="center"> <strong>Step 3: Registry Performance Tweaks</strong><br> Press <kbd>Windows + R</kbd>, type <code>regedit</code>, and press <kbd>Enter</kbd>.<br> Navigate to the following registry paths and modify the values: </p> | Registry Path | Value | Default | Recommended | |---------------|-------|---------|-------------| | `HKEY_CURRENT_USER\Control Panel\Mouse` | `MouseHoverTime` | `400` | `10` | | `HKEY_CURRENT_USER\Control Panel\Desktop` | `MenuShowDelay` | `400` | `10` | | `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile` | `SystemResponsiveness` | `14` | `0` | | `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games` | `GPU Priority` | `8` | `8` | | `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games` | `Priority` | `2` | `6` | <p align="center"> <strong>Restart your PC after applying these registry changes.</strong> </p>
+```html
+<p align="center">
+  <img src="assets/Registry.png" width="400" alt="Registry Tweaks">
+</p>
+
+<p align="center">
+  <strong>Step 3: Registry Performance Tweaks</strong><br>
+  Press <kbd>Windows + R</kbd>, type <code>regedit</code>, and press <kbd>Enter</kbd>.<br>
+  Navigate to the following registry paths and change the values:
+</p>
+
+<h3>Mouse Hover Time</h3>
+
+<pre>
+Path:
+HKEY_CURRENT_USER\Control Panel\Mouse
+
+MouseHoverTime
+400 → 10
+</pre>
+
+<h3>Menu Show Delay</h3>
+
+<pre>
+Path:
+HKEY_CURRENT_USER\Control Panel\Desktop
+
+MenuShowDelay
+400 → 10
+</pre>
+
+<h3>System Responsiveness</h3>
+
+<pre>
+Path:
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile
+
+SystemResponsiveness
+14 → 0
+</pre>
+
+<h3>Games Task Priority</h3>
+
+<pre>
+Path:
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games
+
+GPU Priority
+8 → 8
+
+Priority
+2 → 6
+</pre>
+
+<p align="center">
+  <strong>Restart your PC after applying these registry changes.</strong>
+</p>
+```
+
 
 <p align="center">
   <img src="assets/msconfig.png" width="400" alt="MSConfig">
@@ -78,15 +136,4 @@
 
 ---
 
-## 🚀 Quick Start (Infiltration Shortcut)
-
-Run **WinRaze** instantly without manual downloads. 
-
-1.  Press <kbd>Win</kbd> + <kbd>R</kbd> to open the **Run** dialog.
-2.  Type `powershell` in the box.
-3.  Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd> to launch as **Administrator**.
-4.  Copy the command below, paste it into the blue window, and hit **Enter**:
-
-```powershell
-irm https://github.com/Rohit5984/WinRaze-Optimize-10-11/releases/download/v1.0.0/WinRaze.ps1 | iex
 
