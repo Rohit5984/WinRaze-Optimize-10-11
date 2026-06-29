@@ -40,6 +40,8 @@
   Follow the steps shown in <strong>Performance.png</strong>.
 </p>
 
+<p align="center"> <img src="assets/Registry.png" width="400" alt="Registry Tweaks"> </p> <p align="center"> <strong>Step 3: Registry Performance Tweaks</strong><br> Press <kbd>Windows + R</kbd>, type <code>regedit</code>, and press <kbd>Enter</kbd>.<br> Navigate to the following registry paths and modify the values: </p> | Registry Path | Value | Default | Recommended | |---------------|-------|---------|-------------| | `HKEY_CURRENT_USER\Control Panel\Mouse` | `MouseHoverTime` | `400` | `10` | | `HKEY_CURRENT_USER\Control Panel\Desktop` | `MenuShowDelay` | `400` | `10` | | `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile` | `SystemResponsiveness` | `14` | `0` | | `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games` | `GPU Priority` | `8` | `8` | | `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games` | `Priority` | `2` | `6` | <p align="center"> <strong>Restart your PC after applying these registry changes.</strong> </p>
+
 <p align="center">
   <img src="assets/msconfig.png" width="400" alt="MSConfig">
 </p>
